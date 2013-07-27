@@ -1,4 +1,4 @@
-package com.shunix.portalsnavn.utils;
+package com.shunix.portalsnav.utils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
