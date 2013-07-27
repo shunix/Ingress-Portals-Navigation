@@ -1,5 +1,7 @@
 package com.shunix.portalsnav.fragments;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ public class DownloadFragment extends Fragment {
 			thread.join();
 			Toast.makeText(getActivity(), "Download complete",
 					Toast.LENGTH_LONG).show();
+			UnZipHelper.unzipFile(UnZipHelper.getZipStorageDir(getActivity(), "data"), "shanghai.zip");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,23 +42,23 @@ public class DownloadFragment extends Fragment {
 			super.run();
 			try {
 				URL url = new URL("http://s.binux.me/ingress/shanghai.kmz");
-				HttpURLConnection urlConnection = (HttpURLConnection) url
-						.openConnection();
-				urlConnection.connect();
-				InputStream inputStream = urlConnection.getInputStream();
-				byte[] buffer = new byte[2048000];
-				@SuppressWarnings("unused")
-				int numread;
-				while ((numread = inputStream.read(buffer)) != -1);
-				inputStream.close();
-				String tmpfile =UnZipHelper.getZipStorageDir(getActivity(), "data") + File.separator + "shanghai.kmz";
-				System.out.println(tmpfile);
+				HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+				InputStream inputStream = httpURLConnection.getInputStream();
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int x;
+				while((x = inputStream.read(buffer, 0, 1024)) >= 0) {
+					byteArrayOutputStream.write(buffer, 0, x);
+				}
+				String tmpfile =UnZipHelper.getZipStorageDir(getActivity(), "data") + File.separator + "shanghai.zip";
 				File file = new File(tmpfile);
-				file.createNewFile();
 				FileOutputStream fileOutputStream = new FileOutputStream(file);
-				fileOutputStream.write(buffer);
-				System.out.println(buffer);
+				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+				bufferedOutputStream.write(byteArrayOutputStream.toByteArray());
+				bufferedOutputStream.close();
 				fileOutputStream.close();
+				byteArrayOutputStream.close();
+				inputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

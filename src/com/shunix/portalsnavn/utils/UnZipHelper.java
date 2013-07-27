@@ -19,7 +19,7 @@ public final class UnZipHelper {
 		ZipInputStream zipInputStream;
 		ZipEntry zipEntry;
 		try {
-			inputStream = new FileInputStream(path + zipname);
+			inputStream = new FileInputStream(path + File.separator + zipname);
 			zipInputStream = new ZipInputStream(new BufferedInputStream(
 					inputStream));
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -28,7 +28,7 @@ public final class UnZipHelper {
 				int count;
 				String filename = zipEntry.getName();
 				FileOutputStream fileOutputStream = new FileOutputStream(path
-						+ filename);
+						+ File.separator + filename);
 				while ((count = zipInputStream.read(buffer)) != -1) {
 					byteArrayOutputStream.write(buffer, 0, count);
 					byte[] bytes = byteArrayOutputStream.toByteArray();
