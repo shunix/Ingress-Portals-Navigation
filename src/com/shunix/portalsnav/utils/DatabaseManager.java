@@ -3,24 +3,23 @@ package com.shunix.portalsnav.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
 import com.shunix.portalsnav.models.PortalsInfo;
 
-import android.content.Context;
-
 public class DatabaseManager {
 	private Context context;
 	private DatabaseAdapter adapter;
-	private int dbId;
-	public DatabaseManager(Context context, String dbName, int id) {
+	public DatabaseManager(Context context, String dbName) {
 		this.context = context;
-		this.dbId = id;
-		adapter = DatabaseAdapter.getInstance(context);
 		DatabaseAdapter.setDatabaseName(dbName);
+		adapter = DatabaseAdapter.getInstance(context);
 		List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
 		models.add(PortalsInfo.class);
 		adapter.setModels(models);
+		adapter.beginTransaction();
 	}
 	
 	public void savePortalsInfo(String name, double lat, double lng) {
@@ -28,14 +27,10 @@ public class DatabaseManager {
 		portalsInfo.setPortalName(name);
 		portalsInfo.setPortalLat(lat);
 		portalsInfo.setPortalLng(lng);
-		portalsInfo.save(context, dbId);
+		portalsInfo.save(context);
 	}
 	
 	public void endTransction() {
 		adapter.commitTransaction();
-	}
-	
-	public void beginTransction() {
-		adapter.beginTransaction();;
 	}
 }

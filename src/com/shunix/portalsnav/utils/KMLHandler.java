@@ -13,11 +13,11 @@ public class KMLHandler extends DefaultHandler {
 	private String[] strings;
 	private DatabaseManager dbManager;
 
-	public KMLHandler(Context context, String dbName, int dbId) {
+	public KMLHandler(Context context, String dbName) {
 		corState = false;
 		nameState = false;
 		strings = new String[2];
-		dbManager = new DatabaseManager(context, dbName, dbId);
+		dbManager = new DatabaseManager(context, dbName);
 	}
 
 	@Override
@@ -62,6 +62,7 @@ public class KMLHandler extends DefaultHandler {
 	@Override
 	public void endDocument() throws SAXException {
 		super.endDocument();
+		dbManager.endTransction();
 	}
 
 	@Override
@@ -69,11 +70,9 @@ public class KMLHandler extends DefaultHandler {
 			throws SAXException {
 		super.endElement(uri, localName, qName);
 		if (uri == "http://www.opengis.net/kml/2.2" && qName == "coordinates") {
-			dbManager.endTransction();
 			corState = false;
 		}
 		if (uri == "http://www.opengis.net/kml/2.2" && qName == "name") {
-			dbManager.endTransction();
 			nameState = false;
 		}
 	}
@@ -88,11 +87,9 @@ public class KMLHandler extends DefaultHandler {
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
 		if (uri == "http://www.opengis.net/kml/2.2" && qName == "coordinates") {
-			dbManager.beginTransction();
 			corState = true;
 		}
 		if (uri == "http://www.opengis.net/kml/2.2" && qName == "name") {
-			dbManager.beginTransction();
 			nameState = true;
 		}
 	}

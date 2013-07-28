@@ -75,7 +75,7 @@ public class DownloadFragment extends Fragment {
 				SAXParser saxParser;
 				saxParser = factory.newSAXParser();
 				XMLReader reader = saxParser.getXMLReader();
-				KMLHandler handler = new KMLHandler(getActivity(), "Database", 1);
+				KMLHandler handler = new KMLHandler(getActivity(), "Database");
 				reader.setContentHandler(handler);
 				InputStream stream = new FileInputStream(new File(
 						UnZipHelper.getZipStorageDir(getActivity(), "data")
