@@ -19,7 +19,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.orm.androrm.QuerySet;
 import com.shunix.portalsnav.R;
+import com.shunix.portalsnav.models.PortalsInfo;
 import com.shunix.portalsnav.utils.AsyncHelper;
 import com.shunix.portalsnav.utils.DownloadAndUnzip;
 import com.shunix.portalsnav.utils.KMLHandler;
@@ -29,6 +31,7 @@ public class DownloadFragment extends Fragment {
 
 	private Button button;
 	private Button button2;
+	private Button button3;
 	private ProgressDialog dialog = null;
 
 	@Override
@@ -43,6 +46,8 @@ public class DownloadFragment extends Fragment {
 				.inflate(R.layout.download_layout, container, false);
 		button = (Button) view.findViewById(R.id.button1);
 		button2 = (Button) view.findViewById(R.id.button2);
+		button3 = (Button) view.findViewById(R.id.button3);
+		button3.setOnClickListener(listener3);
 		button2.setOnClickListener(listener2);
 		button.setOnClickListener(listener);
 		return view;
@@ -70,7 +75,7 @@ public class DownloadFragment extends Fragment {
 				SAXParser saxParser;
 				saxParser = factory.newSAXParser();
 				XMLReader reader = saxParser.getXMLReader();
-				KMLHandler handler = new KMLHandler();
+				KMLHandler handler = new KMLHandler(getActivity(), "Database", 1);
 				reader.setContentHandler(handler);
 				InputStream stream = new FileInputStream(new File(
 						UnZipHelper.getZipStorageDir(getActivity(), "data")
@@ -81,6 +86,14 @@ public class DownloadFragment extends Fragment {
 				e.printStackTrace();
 			}
 
+		}
+	};
+	OnClickListener listener3 = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			QuerySet<PortalsInfo> querySet = PortalsInfo.objects(getActivity());
+			System.out.println(querySet.all().count());
 		}
 	};
 
