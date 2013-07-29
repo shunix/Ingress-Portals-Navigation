@@ -6,7 +6,9 @@ import java.util.List;
 import android.content.Context;
 
 import com.orm.androrm.DatabaseAdapter;
+import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
+import com.orm.androrm.QuerySet;
 import com.shunix.portalsnav.models.PortalsInfo;
 
 public class DatabaseManager {
@@ -28,6 +30,11 @@ public class DatabaseManager {
 		portalsInfo.setPortalLat(lat);
 		portalsInfo.setPortalLng(lng);
 		portalsInfo.save(context);
+	}
+	
+	public QuerySet<PortalsInfo> getPortalsWithin(int dist) {
+		Filter filter = new Filter();
+		return PortalsInfo.objects(context);
 	}
 	
 	public void endTransction() {

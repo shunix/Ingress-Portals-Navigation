@@ -11,6 +11,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,6 +28,7 @@ import com.shunix.portalsnav.models.PortalsInfo;
 import com.shunix.portalsnav.utils.AsyncHelper;
 import com.shunix.portalsnav.utils.DownloadAndUnzip;
 import com.shunix.portalsnav.utils.KMLHandler;
+import com.shunix.portalsnav.utils.SQLHelper;
 import com.shunix.portalsnav.utils.UnZipHelper;
 
 public class DownloadFragment extends Fragment {
@@ -94,6 +98,15 @@ public class DownloadFragment extends Fragment {
 		public void onClick(View v) {
 			QuerySet<PortalsInfo> querySet = PortalsInfo.objects(getActivity());
 			System.out.println(querySet.all().count());
+			SQLHelper sqlHelper = new SQLHelper(getActivity(), "Database");
+			SQLiteDatabase database = sqlHelper.getReadableDatabase();
+			Cursor cur = database.query("PortalsInfo", new String[] {"portalName", "portalLat", "portalLng"}, null, null, null, null, null);
+			while(cur.moveToNext())
+			{
+				System.out.println(cur.getString(cur.getColumnIndex("portalName")));
+				System.out.println(cur.getString(cur.getColumnIndex("portalLat")));
+				System.out.println(cur.getString(cur.getColumnIndex("portalLng")));
+			}
 		}
 	};
 
