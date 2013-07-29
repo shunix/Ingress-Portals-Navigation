@@ -1,10 +1,5 @@
 package com.shunix.portalsnav.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -55,8 +50,8 @@ public class KMLHandler extends DefaultHandler {
 				return;
 			}
 			//System.out.println(strings[0] + " " + firstIndex + " " + lastIndex);
-			double lat = Double.parseDouble(str.substring(0, firstIndex));
-			double lng = Double.parseDouble(str.substring(firstIndex + 1,
+			double lng = Double.parseDouble(str.substring(0, firstIndex));
+			double lat = Double.parseDouble(str.substring(firstIndex + 1,
 					lastIndex));
 			System.out.println(strings[0] + " " + lat + " " + lng);
 			dbManager.savePortalsInfo(strings[0], lat, lng);

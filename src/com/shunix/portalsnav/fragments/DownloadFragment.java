@@ -26,6 +26,7 @@ import com.orm.androrm.QuerySet;
 import com.shunix.portalsnav.R;
 import com.shunix.portalsnav.models.PortalsInfo;
 import com.shunix.portalsnav.utils.AsyncHelper;
+import com.shunix.portalsnav.utils.DatabaseManager;
 import com.shunix.portalsnav.utils.DownloadAndUnzip;
 import com.shunix.portalsnav.utils.KMLHandler;
 import com.shunix.portalsnav.utils.SQLHelper;
@@ -75,6 +76,11 @@ public class DownloadFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			try {
+				SQLHelper helper = new SQLHelper(getActivity(), "Database");
+				SQLiteDatabase database = helper.getWritableDatabase();
+				database.delete("PortalsInfo", null, null);
+				database.close();
+				helper.close();
 				SAXParserFactory factory = SAXParserFactory.newInstance();
 				SAXParser saxParser;
 				saxParser = factory.newSAXParser();
@@ -98,15 +104,8 @@ public class DownloadFragment extends Fragment {
 		public void onClick(View v) {
 			QuerySet<PortalsInfo> querySet = PortalsInfo.objects(getActivity());
 			System.out.println(querySet.all().count());
-			SQLHelper sqlHelper = new SQLHelper(getActivity(), "Database");
-			SQLiteDatabase database = sqlHelper.getReadableDatabase();
-			Cursor cur = database.query("PortalsInfo", new String[] {"portalName", "portalLat", "portalLng"}, null, null, null, null, null);
-			while(cur.moveToNext())
-			{
-				System.out.println(cur.getString(cur.getColumnIndex("portalName")));
-				System.out.println(cur.getString(cur.getColumnIndex("portalLat")));
-				System.out.println(cur.getString(cur.getColumnIndex("portalLng")));
-			}
+			DatabaseManager dbManager = new DatabaseManager(getActivity(), "Database");
+			dbManager.getPortalsWithin(30.507895, 120.681085, 10);
 		}
 	};
 
