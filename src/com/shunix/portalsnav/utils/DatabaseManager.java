@@ -58,10 +58,17 @@ public class DatabaseManager {
 	public Cursor getPortalsWithin(double lat, double lng, int dist) {
 		SQLHelper sqlHelper = new SQLHelper(context, "Database");
 		SQLiteDatabase database = sqlHelper.getReadableDatabase();
+		database.beginTransaction();
 		Cursor cur = database.query("PortalsInfo", new String[] { "portalName",
 				"portalLat", "portalLng" },
 				null, null, null,
 				null, null);
+		if(cur != null) {
+			database.setTransactionSuccessful();
+		}
+		if(database.inTransaction()) {
+			database.endTransaction();
+		}
 		while (cur.moveToNext()) {
 			if (getDistance(lat, lng,
 					cur.getDouble(cur.getColumnIndex("portalLat")),
