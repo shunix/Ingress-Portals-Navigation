@@ -11,10 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import android.R.integer;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,14 +21,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.orm.androrm.QuerySet;
 import com.shunix.portalsnav.R;
-import com.shunix.portalsnav.models.PortalsInfo;
 import com.shunix.portalsnav.utils.AsyncHelper;
-import com.shunix.portalsnav.utils.DatabaseManager;
 import com.shunix.portalsnav.utils.DownloadAndUnzip;
+import com.shunix.portalsnav.utils.DrivingHandler;
 import com.shunix.portalsnav.utils.KMLHandler;
-import com.shunix.portalsnav.utils.NavigationUtils;
 import com.shunix.portalsnav.utils.SQLHelper;
 import com.shunix.portalsnav.utils.SingleStep;
 import com.shunix.portalsnav.utils.UnZipHelper;
@@ -110,7 +104,8 @@ public class DownloadFragment extends Fragment {
 			//System.out.println(querySet.all().count());
 			//DatabaseManager dbManager = new DatabaseManager(getActivity(), "Database");
 			//dbManager.getPortalsWithin(30.507895, 120.681085, 10);
-			List<SingleStep> list = NavigationUtils.getDrivingSteps(getActivity(), 31.316642, 121.391618, 31.178713, 121.447272);
+			DrivingHandler drivingHandler = new DrivingHandler(getActivity(), 31.316642, 121.391618, 31.178713, 121.447272);
+			List<SingleStep> list = drivingHandler.getList();
 			for(int i = 0; i < list.size(); ++i) {
 				System.out.println(list.get(i).direction);
 			}

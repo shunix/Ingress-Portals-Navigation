@@ -17,11 +17,11 @@ public class AsyncHelper {
 			public void run() {
 				synchronized (object) {
 					async.beginWork();
+					isFinished = true;
 					object.notifyAll();
 				}
 			}
 		}.start();
-		isFinished = true;
 	}
 
 	public void AsyncWorkEnd() {
