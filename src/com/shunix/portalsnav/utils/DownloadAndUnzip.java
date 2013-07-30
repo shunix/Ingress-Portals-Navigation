@@ -8,26 +8,39 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 
 public class DownloadAndUnzip implements AsyncInterface {
 
-	private Context context;
+	private Activity context;
 	private ProgressDialog dialog;
-	public DownloadAndUnzip(Context context, ProgressDialog dialog) {
+	public DownloadAndUnzip(Activity context) {
 		this.context = context;
-		this.dialog = dialog;
 	}
 	@Override
 	public void endWork() {
 		UnZipHelper.unzipFile(UnZipHelper.getZipStorageDir(context, "data"), "shanghai.zip");
-		dialog.dismiss();
+		context.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				dialog.dismiss();
+			}
+		});
 	}
 
 	@Override
 	public void beginWork() {
 		try {
+			context.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					dialog = ProgressDialog.show(context, "Downloading",
+							"Please wait for a moment", true);
+				}
+			});
 			URL url = new URL("http://s.binux.me/ingress/shanghai.kmz");
 			HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
 			InputStream inputStream = httpURLConnection.getInputStream();

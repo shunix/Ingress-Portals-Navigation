@@ -26,7 +26,7 @@ public class AsyncHelper {
 
 	public void AsyncWorkEnd() {
 		try {
-			new Thread() {
+			Thread thread = new Thread() {
 				@Override
 				public void run() {
 					synchronized (object) {
@@ -40,7 +40,8 @@ public class AsyncHelper {
 						async.endWork();
 					}
 				}
-			}.start();
+			};
+			thread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

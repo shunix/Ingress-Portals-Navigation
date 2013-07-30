@@ -54,12 +54,9 @@ public class DrivingHandler implements AsyncInterface {
 	@Override
 	public void endWork() {
 		try {
-			System.out.println("Enter endWork");
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
-			System.out.println(status);
-			System.out.println(status.equalsIgnoreCase("OK"));
-			if (status.equalsIgnoreCase("OK")) {
+			if (!status.equalsIgnoreCase("OK")) {
 				context.runOnUiThread(new Runnable() {
 
 					@Override
@@ -74,7 +71,9 @@ public class DrivingHandler implements AsyncInterface {
 			JSONObject overall = legs.getJSONObject(0);
 			SingleStep step = new SingleStep();
 			step.distance = overall.getJSONObject("distance").getString("text");
-			step.duration = overall.getJSONObject("dration").getString("text");
+			System.out.println(step.distance);
+			step.duration = overall.getJSONObject("duration").getString("text");
+			System.out.println(step.duration);
 			step.startLocation.lat = overall.getJSONObject("start_location")
 					.getString("lat");
 			step.startLocation.lng = overall.getJSONObject("start_location")
@@ -86,22 +85,24 @@ public class DrivingHandler implements AsyncInterface {
 			list.add(step);
 			JSONArray stepsArray = legs.getJSONObject(0).getJSONArray("steps");
 			for (int i = 0; i < stepsArray.length(); ++i) {
-				overall = stepsArray.getJSONObject(i);
-				step = new SingleStep();
-				step.distance = overall.getJSONObject("distance").getString(
+				JSONObject object = stepsArray.getJSONObject(i);
+				SingleStep everyStep = new SingleStep();
+				everyStep.distance = object.getJSONObject("distance").getString(
 						"text");
-				step.duration = overall.getJSONObject("dration").getString(
+				System.out.println(step.distance);
+				everyStep.duration = object.getJSONObject("duration").getString(
 						"text");
-				step.startLocation.lat = overall
+				System.out.println(step.duration);
+				everyStep.startLocation.lat = object
 						.getJSONObject("start_location").getString("lat");
-				step.startLocation.lng = overall
+				everyStep.startLocation.lng = object
 						.getJSONObject("start_location").getString("lng");
-				step.endLocation.lat = overall.getJSONObject("end_location")
+				everyStep.endLocation.lat = object.getJSONObject("end_location")
 						.getString("lat");
-				step.endLocation.lng = overall.getJSONObject("end_location")
+				everyStep.endLocation.lng = object.getJSONObject("end_location")
 						.getString("lng");
-				step.direction = overall.getString("html_instructions");
-				list.add(step);
+				everyStep.direction = object.getString("html_instructions");
+				list.add(everyStep);
 			}
 			context.runOnUiThread(new Runnable() {
 
@@ -110,16 +111,16 @@ public class DrivingHandler implements AsyncInterface {
 					dialog.dismiss();
 				}
 			});
+			//TODO: Do your work here.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return;
 	}
 	
-	public List<SingleStep> getList() {
+	public void processData() {
 		AsyncHelper asyncHelper = new AsyncHelper(this);
 		asyncHelper.AsyncWorkBegin();
 		asyncHelper.AsyncWorkEnd();
-		return list;
 	}
 }

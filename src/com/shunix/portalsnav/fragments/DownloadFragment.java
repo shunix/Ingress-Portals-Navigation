@@ -60,10 +60,8 @@ public class DownloadFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-			dialog = ProgressDialog.show(getActivity(), "Downloading",
-					"Please wait for a moment", true);
 			DownloadAndUnzip downloadAndUnzip = new DownloadAndUnzip(
-					getActivity(), dialog);
+					getActivity());
 			AsyncHelper asyncHelper = new AsyncHelper(downloadAndUnzip);
 			asyncHelper.AsyncWorkBegin();
 			asyncHelper.AsyncWorkEnd();
@@ -105,10 +103,7 @@ public class DownloadFragment extends Fragment {
 			//DatabaseManager dbManager = new DatabaseManager(getActivity(), "Database");
 			//dbManager.getPortalsWithin(30.507895, 120.681085, 10);
 			DrivingHandler drivingHandler = new DrivingHandler(getActivity(), 31.316642, 121.391618, 31.178713, 121.447272);
-			List<SingleStep> list = drivingHandler.getList();
-			for(int i = 0; i < list.size(); ++i) {
-				System.out.println(list.get(i).direction);
-			}
+			drivingHandler.processData();
 		}
 	};
 
