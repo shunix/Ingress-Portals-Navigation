@@ -3,6 +3,7 @@ package com.shunix.portalsnav.fragments;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -10,6 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import android.R.integer;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -29,7 +31,9 @@ import com.shunix.portalsnav.utils.AsyncHelper;
 import com.shunix.portalsnav.utils.DatabaseManager;
 import com.shunix.portalsnav.utils.DownloadAndUnzip;
 import com.shunix.portalsnav.utils.KMLHandler;
+import com.shunix.portalsnav.utils.NavigationUtils;
 import com.shunix.portalsnav.utils.SQLHelper;
+import com.shunix.portalsnav.utils.SingleStep;
 import com.shunix.portalsnav.utils.UnZipHelper;
 
 public class DownloadFragment extends Fragment {
@@ -102,10 +106,14 @@ public class DownloadFragment extends Fragment {
 		
 		@Override
 		public void onClick(View v) {
-			QuerySet<PortalsInfo> querySet = PortalsInfo.objects(getActivity());
-			System.out.println(querySet.all().count());
-			DatabaseManager dbManager = new DatabaseManager(getActivity(), "Database");
-			dbManager.getPortalsWithin(30.507895, 120.681085, 10);
+			//QuerySet<PortalsInfo> querySet = PortalsInfo.objects(getActivity());
+			//System.out.println(querySet.all().count());
+			//DatabaseManager dbManager = new DatabaseManager(getActivity(), "Database");
+			//dbManager.getPortalsWithin(30.507895, 120.681085, 10);
+			List<SingleStep> list = NavigationUtils.getDrivingSteps(getActivity(), 31.316642, 121.391618, 31.178713, 121.447272);
+			for(int i = 0; i < list.size(); ++i) {
+				System.out.println(list.get(i).direction);
+			}
 		}
 	};
 
