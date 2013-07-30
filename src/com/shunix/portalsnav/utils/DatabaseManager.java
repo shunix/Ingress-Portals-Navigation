@@ -87,5 +87,6 @@ public class DatabaseManager {
 
 	public void endTransction() {
 		adapter.commitTransaction();
+		adapter.close();
 	}
 }

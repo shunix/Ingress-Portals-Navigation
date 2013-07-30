@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.shunix.portalsnav.R;
-import com.shunix.portalsnav.fragments.DownloadFragment;
+import com.shunix.portalsnav.fragments.StartFragment;
 
 public class MainActivity extends FragmentActivity {
 
@@ -12,7 +12,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.container_layout);
-		getSupportFragmentManager().beginTransaction().add(R.id.container, new DownloadFragment()).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.container, new StartFragment()).commit();
 	}
 
 }

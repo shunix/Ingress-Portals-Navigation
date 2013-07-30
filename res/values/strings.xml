@@ -1,5 +1,16 @@
 <resources>
 
     <string name="app_name">Ingress Portals Navigation</string>
+    <string name="update">Update Database</string>
+    <string name="start">Start Navigation</string>
+    <string name="about">About Author</string>
+    <string name="namehint">Author:</string>
+    <string name="name">Shunix</string>
+    <string name="emailhint">Email:</string>
+    <string name="email">admin@shunix.com</string>
+    <string name="webhint">Website:</string>
+    <string name="website">http://www.shunix.com</string>
+    <string name="version">1.0.0</string>
+    <string name="ok">OK</string>
 
 </resources>
