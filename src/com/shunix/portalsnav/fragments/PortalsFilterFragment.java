@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.shunix.portalsnav.R;
 import com.shunix.portalsnav.utils.BasicPortal;
 import com.shunix.portalsnav.utils.DatabaseManager;
-import com.shunix.portalsnav.utils.ShunixParcelable;
 
 public class PortalsFilterFragment extends Fragment {
 
@@ -102,10 +101,14 @@ public class PortalsFilterFragment extends Fragment {
 				dbManager.endTransction();
 				List<BasicPortal> arrayList = new ArrayList<BasicPortal>();
 				arrayList = dbManager.getPortalsWithin(lat, lng, range);
-				ShunixParcelable parcelable = new ShunixParcelable(arrayList);
+				BasicPortal[] portals = new BasicPortal[arrayList.size()];
+				for(int i = 0; i < arrayList.size(); ++i) {
+					portals[i] = arrayList.get(i);
+				}
 				PortalsList portalsList = new PortalsList();
 				Bundle bundle = new Bundle();
-				bundle.putParcelable("list", parcelable);
+				//Can NOT directly pass an arraylist as parcelable object in bundle.
+				bundle.putParcelableArray("array", portals);
 				portalsList.setArguments(bundle);
 				getActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, portalsList)
