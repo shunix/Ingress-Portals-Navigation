@@ -37,7 +37,12 @@ public class DownloadAndUnzip implements AsyncInterface {
 					"shanghai.zip");
 			SQLHelper helper = new SQLHelper(context, "Database");
 			SQLiteDatabase database = helper.getWritableDatabase();
-			database.delete("PortalsInfo", null, null);
+			//Clear database on every update
+			try {
+				database.delete("PortalsInfo", null, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			database.close();
 			helper.close();
 			SAXParserFactory factory = SAXParserFactory.newInstance();

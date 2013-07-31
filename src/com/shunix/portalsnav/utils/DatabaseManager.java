@@ -55,38 +55,37 @@ public class DatabaseManager {
 		portalsInfo.save(context);
 	}
 
-	public Cursor getPortalsWithin(double lat, double lng, int dist) {
+	public ArrayList<BasicPortal> getPortalsWithin(double lat, double lng, int dist) {
+		ArrayList<BasicPortal> list = new ArrayList<BasicPortal>();
 		SQLHelper sqlHelper = new SQLHelper(context, "Database");
 		SQLiteDatabase database = sqlHelper.getReadableDatabase();
 		database.beginTransaction();
 		Cursor cur = database.query("PortalsInfo", new String[] { "portalName",
-				"portalLat", "portalLng" },
-				null, null, null,
-				null, null);
-		if(cur != null) {
+				"portalLat", "portalLng" }, null, null, null, null, null);
+		if (cur != null) {
 			database.setTransactionSuccessful();
 		}
-		if(database.inTransaction()) {
+		if (database.inTransaction()) {
 			database.endTransaction();
 		}
 		while (cur.moveToNext()) {
 			if (getDistance(lat, lng,
 					cur.getDouble(cur.getColumnIndex("portalLat")),
 					cur.getDouble(cur.getColumnIndex("portalLng"))) <= dist) {
-				System.out.println(getDistance(lat, lng,
-						cur.getDouble(cur.getColumnIndex("portalLat")),
-						cur.getDouble(cur.getColumnIndex("portalLng"))));
-				System.out.println(cur.getString(cur
-						.getColumnIndex("portalName")));
+				BasicPortal portal = new BasicPortal(cur.getString(cur
+						.getColumnIndex("portalName")), String.valueOf(cur
+						.getDouble(cur.getColumnIndex("portalLat"))),
+						String.valueOf(cur.getDouble(cur
+								.getColumnIndex("portalLng"))));
+				list.add(portal);
 			}
-			// System.out.println(cur.getString(cur.getColumnIndex("portalLat")));
-			// System.out.println(cur.getString(cur.getColumnIndex("portalLng")));
 		}
-		return cur;
+		return list;
 	}
 
 	public void endTransction() {
 		adapter.commitTransaction();
 		adapter.close();
+		System.out.println("End transaction");
 	}
 }
