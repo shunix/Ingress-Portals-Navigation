@@ -55,8 +55,8 @@ public class DatabaseManager {
 		portalsInfo.save(context);
 	}
 
-	public ArrayList<BasicPortal> getPortalsWithin(double lat, double lng, int dist) {
-		ArrayList<BasicPortal> list = new ArrayList<BasicPortal>();
+	public List<BasicPortal> getPortalsWithin(double lat, double lng, int dist) {
+		List<BasicPortal> list = new ArrayList<BasicPortal>();
 		SQLHelper sqlHelper = new SQLHelper(context, "Database");
 		SQLiteDatabase database = sqlHelper.getReadableDatabase();
 		database.beginTransaction();
@@ -87,6 +87,5 @@ public class DatabaseManager {
 	public void endTransction() {
 		adapter.commitTransaction();
 		adapter.close();
-		System.out.println("End transaction");
 	}
 }

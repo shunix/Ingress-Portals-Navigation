@@ -1,6 +1,7 @@
 package com.shunix.portalsnav.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.shunix.portalsnav.R;
 import com.shunix.portalsnav.utils.BasicPortal;
 import com.shunix.portalsnav.utils.DatabaseManager;
+import com.shunix.portalsnav.utils.ShunixParcelable;
 
 public class PortalsFilterFragment extends Fragment {
 
@@ -98,11 +100,12 @@ public class PortalsFilterFragment extends Fragment {
 				DatabaseManager dbManager = new DatabaseManager(getActivity(),
 						"Database");
 				dbManager.endTransction();
-				ArrayList<BasicPortal> arrayList = new ArrayList<BasicPortal>();
+				List<BasicPortal> arrayList = new ArrayList<BasicPortal>();
 				arrayList = dbManager.getPortalsWithin(lat, lng, range);
+				ShunixParcelable parcelable = new ShunixParcelable(arrayList);
 				PortalsList portalsList = new PortalsList();
 				Bundle bundle = new Bundle();
-				bundle.putSerializable("list", arrayList);
+				bundle.putParcelable("list", parcelable);
 				portalsList.setArguments(bundle);
 				getActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, portalsList)
