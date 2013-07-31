@@ -18,5 +18,6 @@
     <string name="range">Portals Within Rang(km): </string>
     <string name="list">List</string>
     <string name="cancel">Cancel</string>
+    <string name="nav">Navigation:</string>
 
 </resources>
