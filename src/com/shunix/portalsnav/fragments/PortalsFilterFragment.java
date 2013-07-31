@@ -109,6 +109,8 @@ public class PortalsFilterFragment extends Fragment {
 				Bundle bundle = new Bundle();
 				//Can NOT directly pass an arraylist as parcelable object in bundle.
 				bundle.putParcelableArray("array", portals);
+				bundle.putDouble("lat", lat);
+				bundle.putDouble("lng", lng);
 				portalsList.setArguments(bundle);
 				getActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, portalsList)

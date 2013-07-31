@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.shunix.portalsnav.R;
@@ -25,6 +26,9 @@ public class PortalsList extends ListFragment {
 	public static final int WALKING = Menu.FIRST + 1;
 	public static final int BICYCLING = Menu.FIRST + 2;
 	public static final int TRANSIT = Menu.FIRST + 3;
+	private double lat;
+	private double lng;
+	private ShunixAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,9 +49,11 @@ public class PortalsList extends ListFragment {
 		for (int i = 0; i < portals.length; ++i) {
 			arrayList.add((BasicPortal) portals[i]);
 		}
+		lat = bundle.getDouble("lat");
+		lng = bundle.getDouble("lng");
 		LayoutInflater layoutInflater = (LayoutInflater) getActivity()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ShunixAdapter adapter = new ShunixAdapter(getActivity(),
+		adapter = new ShunixAdapter(getActivity(),
 				R.layout.row_layout, arrayList, layoutInflater);
 		setListAdapter(adapter);
 	}
@@ -55,6 +61,13 @@ public class PortalsList extends ListFragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		Bundle bundle = new Bundle();
+		bundle.putDouble("lat", lat);
+		bundle.putDouble("lng", lng);
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+		double targetLat = Double.parseDouble(adapter.getItem(info.position).getPortalLat());
+		double targetLng = Double.parseDouble(adapter.getItem(info.position).getPortalLng());
+		bundle.putDouble("tarlat", targetLat);
+		bundle.putDouble("tarlng", targetLng);
 		NavigationFragment navigationFragment = new NavigationFragment();
 		switch (item.getItemId()) {
 		case DRIVING:
