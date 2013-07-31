@@ -18,10 +18,6 @@ public class StartFragment extends Fragment {
 	private Button startButton;
 	private Button aboutButton;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +49,7 @@ public class StartFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			getActivity().getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, new NavigationFragment())
+					.replace(R.id.container, new PortalsFilterFragment())
 					.addToBackStack(null).commit();
 		}
 	};
