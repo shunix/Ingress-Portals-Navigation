@@ -1,16 +1,16 @@
 package com.shunix.portalsnav.fragments;
 
-import com.shunix.portalsnav.R;
-import com.shunix.portalsnav.utils.AsyncHelper;
-import com.shunix.portalsnav.utils.DownloadAndUnzip;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.shunix.portalsnav.R;
+import com.shunix.portalsnav.utils.AsyncHelper;
+import com.shunix.portalsnav.utils.DownloadAndUnzip;
 
 public class StartFragment extends Fragment {
 

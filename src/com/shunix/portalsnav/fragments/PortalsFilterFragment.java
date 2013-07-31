@@ -84,24 +84,30 @@ public class PortalsFilterFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			int range = 1;
 			try {
-				int range = Integer
-						.parseInt(rangeEditText.getText().toString());
+				try {
+					range = Integer
+							.parseInt(rangeEditText.getText().toString());
+				} catch (Exception e) {
+					Toast.makeText(getActivity(),
+							"Your input is not a valid number.",
+							Toast.LENGTH_LONG).show();
+					e.printStackTrace();
+				}
 				DatabaseManager dbManager = new DatabaseManager(getActivity(),
 						"Database");
-				ArrayList<BasicPortal> portals = dbManager.getPortalsWithin(
-						lat, lng, range);
+				dbManager.endTransction();
+				ArrayList<BasicPortal> arrayList = new ArrayList<BasicPortal>();
+				arrayList = dbManager.getPortalsWithin(lat, lng, range);
 				PortalsList portalsList = new PortalsList();
 				Bundle bundle = new Bundle();
-				bundle.putSerializable("list", portals);
+				bundle.putSerializable("list", arrayList);
 				portalsList.setArguments(bundle);
 				getActivity().getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, portalsList)
 						.addToBackStack(null).commit();
 			} catch (Exception e) {
-				Toast.makeText(getActivity(),
-						"Your input is not a valid number.", Toast.LENGTH_LONG)
-						.show();
 				e.printStackTrace();
 			}
 		}

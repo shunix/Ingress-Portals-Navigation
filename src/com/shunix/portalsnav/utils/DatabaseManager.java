@@ -80,6 +80,7 @@ public class DatabaseManager {
 				list.add(portal);
 			}
 		}
+		database.close();
 		return list;
 	}
 

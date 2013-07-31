@@ -2,16 +2,16 @@ package com.shunix.portalsnav.fragments;
 
 import java.util.ArrayList;
 
-import com.shunix.portalsnav.R;
-import com.shunix.portalsnav.ui.ShunixAdapter;
-import com.shunix.portalsnav.utils.BasicPortal;
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.shunix.portalsnav.R;
+import com.shunix.portalsnav.ui.ShunixAdapter;
+import com.shunix.portalsnav.utils.BasicPortal;
 
 public class PortalsList extends ListFragment {
 
