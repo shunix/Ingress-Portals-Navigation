@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -24,11 +26,12 @@ public class PortalsList extends ListFragment {
 
 	public static final int DRIVING = Menu.FIRST;
 	public static final int WALKING = Menu.FIRST + 1;
-	public static final int BICYCLING = Menu.FIRST + 2;
-	public static final int TRANSIT = Menu.FIRST + 3;
+	// public static final int BICYCLING = Menu.FIRST + 2;
+	public static final int TRANSIT = Menu.FIRST + 2;
 	private double lat;
 	private double lng;
 	private ShunixAdapter adapter;
+	private final String URL_STUB = "http://ditu.google.cn/maps?f=d&source=s_d&saddr=";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,63 +56,44 @@ public class PortalsList extends ListFragment {
 		lng = bundle.getDouble("lng");
 		LayoutInflater layoutInflater = (LayoutInflater) getActivity()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		adapter = new ShunixAdapter(getActivity(),
-				R.layout.row_layout, arrayList, layoutInflater);
+		adapter = new ShunixAdapter(getActivity(), R.layout.row_layout,
+				arrayList, layoutInflater);
 		setListAdapter(adapter);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		Bundle bundle = new Bundle();
-		bundle.putDouble("lat", lat);
-		bundle.putDouble("lng", lng);
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
-		double targetLat = Double.parseDouble(adapter.getItem(info.position).getPortalLat());
-		double targetLng = Double.parseDouble(adapter.getItem(info.position).getPortalLng());
-		bundle.putDouble("tarlat", targetLat);
-		bundle.putDouble("tarlng", targetLng);
-		NavigationFragment navigationFragment = new NavigationFragment();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		String targetLat = adapter.getItem(info.position).getPortalLat();
+		String targetLng = adapter.getItem(info.position).getPortalLng();
+		String target = "";
 		switch (item.getItemId()) {
 		case DRIVING:
-			// Toast.makeText(getActivity(), "Driving",
-			// Toast.LENGTH_LONG).show();
-			bundle.putInt("mode", DRIVING);
-			navigationFragment.setArguments(bundle);
-			getActivity().getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, navigationFragment)
-					.addToBackStack(null).commit();
+			target = URL_STUB + String.valueOf(lat) + ","
+					+ String.valueOf(lng) + "&daddr=" + targetLat + ","
+					+ targetLng + "&dirflg=d";
 			break;
 		case WALKING:
-			// Toast.makeText(getActivity(), "Walking",
-			// Toast.LENGTH_LONG).show();
-			bundle.putInt("mode", WALKING);
-			navigationFragment.setArguments(bundle);
-			getActivity().getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, navigationFragment)
-					.addToBackStack(null).commit();
-			break;
-		case BICYCLING:
-			// Toast.makeText(getActivity(), "Bicycling",
-			// Toast.LENGTH_LONG).show();
-			bundle.putInt("mode", BICYCLING);
-			navigationFragment.setArguments(bundle);
-			getActivity().getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, navigationFragment)
-					.addToBackStack(null).commit();
+			target = URL_STUB + String.valueOf(lat) + ","
+					+ String.valueOf(lng) + "&daddr=" + targetLat + ","
+					+ targetLng + "&dirflg=w";
 			break;
 		case TRANSIT:
-			// Toast.makeText(getActivity(), "Transit",
-			// Toast.LENGTH_LONG).show();
-			bundle.putInt("mode", TRANSIT);
-			navigationFragment.setArguments(bundle);
-			getActivity().getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, navigationFragment)
-					.addToBackStack(null).commit();
+			target = URL_STUB + String.valueOf(lat) + ","
+					+ String.valueOf(lng) + "&daddr=" + targetLat + ","
+					+ targetLng + "&dirflg=r";
 			break;
 
 		default:
 			break;
 		}
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(target));
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				& Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		intent.setClassName("com.google.android.apps.maps", 
+            "com.google.android.maps.MapsActivity");
+		getActivity().startActivity(intent);
 		return true;
 	}
 
@@ -119,7 +103,6 @@ public class PortalsList extends ListFragment {
 		menu.setHeaderTitle("Select transport mode");
 		menu.add(0, DRIVING, 0, "Driving");
 		menu.add(0, WALKING, 0, "Walking");
-		menu.add(0, BICYCLING, 0, "Bicycling");
 		menu.add(0, TRANSIT, 0, "Transit");
 	}
 
