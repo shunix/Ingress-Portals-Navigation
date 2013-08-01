@@ -1,5 +1,9 @@
 package com.shunix.portalsnav.fragments;
 
+import android.content.Context;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.shunix.portalsnav.R;
 import com.shunix.portalsnav.utils.AsyncHelper;
@@ -18,6 +23,39 @@ public class StartFragment extends Fragment {
 	private Button startButton;
 	private Button aboutButton;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	public boolean isNetworkAvailable() {
+		Context context = getActivity().getApplicationContext();
+		ConnectivityManager connectivity = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivity == null) {
+			return false;
+		} else {
+			NetworkInfo[] info = connectivity.getAllNetworkInfo();
+			if (info != null) {
+				for (int i = 0; i < info.length; i++) {
+					if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean isGPSAvailable() {
+		LocationManager alm = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+		if (alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +74,13 @@ public class StartFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			if (!isNetworkAvailable()) {
+				Toast.makeText(
+						getActivity(),
+						"Network is not avaliable,  please enable network first",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 			DownloadAndUnzip downloadAndUnzip = new DownloadAndUnzip(
 					getActivity());
 			AsyncHelper asyncHelper = new AsyncHelper(downloadAndUnzip);
@@ -48,6 +93,18 @@ public class StartFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			if (!isNetworkAvailable()) {
+				Toast.makeText(
+						getActivity(),
+						"Network is not available, please enable network first",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			if (!isGPSAvailable()) {
+				Toast.makeText(getActivity(),
+						"GPS is not available, please enable GPS first",
+						Toast.LENGTH_LONG).show();
+			}
 			getActivity().getSupportFragmentManager().beginTransaction()
 					.replace(R.id.container, new PortalsFilterFragment())
 					.addToBackStack(null).commit();
