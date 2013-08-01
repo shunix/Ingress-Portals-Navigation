@@ -10,8 +10,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.shunix.portalsnav.ui.ShunixHandler;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.os.Looper;
+import android.os.Message;
 
 public class WalkingHandler implements AsyncInterface{
 	private HttpGet httpGet;
@@ -21,15 +26,17 @@ public class WalkingHandler implements AsyncInterface{
 	private ProgressDialog dialog = null;
 	private final String URL_STUB = "http://maps.googleapis.com/maps/api/directions/json?";
 	private List<SingleStep> list;
+	private ShunixHandler handler;
 
 	public WalkingHandler(Activity context, double lat1, double lng1,
-			double lat2, double lng2) {
+			double lat2, double lng2, ShunixHandler handler) {
 		this.context = context;
 		this.url = URL_STUB + "origin=" + String.valueOf(lat1) + ","
 				+ String.valueOf(lng1) + "&destination=" + String.valueOf(lat2)
 				+ "," + String.valueOf(lng2) + "&mode=walking&sensor=false";
 		list = new ArrayList<SingleStep>();
 		httpGet = new HttpGet(this.url);
+		this.handler = handler;
 	}
 
 	@Override
@@ -54,6 +61,7 @@ public class WalkingHandler implements AsyncInterface{
 	@Override
 	public void endWork() {
 		try {
+			Looper.prepare();
 			JSONObject jsonObject = new JSONObject(result);
 			String status = jsonObject.getString("status");
 			if (!status.equalsIgnoreCase("OK")) {
@@ -102,8 +110,19 @@ public class WalkingHandler implements AsyncInterface{
 				everyStep.endLocation.lng = object.getJSONObject("end_location")
 						.getString("lng");
 				everyStep.direction = object.getString("html_instructions");
+				everyStep.direction = everyStep.direction.replaceAll("<b>|</b>", " ").replaceAll("<div.*?>", " ").replaceAll("</div>", " ");
 				list.add(everyStep);
 			}
+			//TODO: Do your work here.
+			Bundle bundle = new Bundle();
+			SingleStep[] steps = new SingleStep[list.size()];
+			for(int i =0; i < list.size(); ++i) {
+				steps[i] = list.get(i);
+			}
+			bundle.putParcelableArray("steps", steps);
+			Message msg = new Message();
+			msg.setData(bundle);
+			handler.sendMessage(msg);
 			context.runOnUiThread(new Runnable() {
 
 				@Override
@@ -111,7 +130,6 @@ public class WalkingHandler implements AsyncInterface{
 					dialog.dismiss();
 				}
 			});
-			//TODO: Do your work here.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

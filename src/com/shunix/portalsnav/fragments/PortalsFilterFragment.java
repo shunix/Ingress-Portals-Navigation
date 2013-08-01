@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class PortalsFilterFragment extends Fragment {
 	private Button cancelButton;
 	private double lat = 0;
 	private double lng = 0;
+	private ProgressDialog dialog2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class PortalsFilterFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.portals_search, container, false);
-		curlocTextView = (TextView) view.findViewById(R.id.textView1);
+		curlocTextView = (TextView) view.findViewById(R.id.textView2);
 		rangeEditText = (EditText) view.findViewById(R.id.editText1);
 		listButton = (Button) view.findViewById(R.id.button1);
 		cancelButton = (Button) view.findViewById(R.id.button2);
@@ -85,39 +87,58 @@ public class PortalsFilterFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-			int range = 1;
-			try {
-				try {
-					range = Integer
-							.parseInt(rangeEditText.getText().toString());
-				} catch (Exception e) {
-					Toast.makeText(getActivity(),
-							"Your input is not a valid number.",
-							Toast.LENGTH_LONG).show();
-					e.printStackTrace();
+			dialog2 = ProgressDialog.show(getActivity(), "Retrieving data",
+					"Please wait for a moment", false);
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					Looper.prepare();
+					int range = 1;
+					try {
+						try {
+							range = Integer.parseInt(rangeEditText.getText()
+									.toString());
+						} catch (Exception e) {
+							Toast.makeText(getActivity(),
+									"Your input is not a valid number.",
+									Toast.LENGTH_LONG).show();
+							e.printStackTrace();
+						}
+						DatabaseManager dbManager = new DatabaseManager(
+								getActivity(), "Database");
+						dbManager.endTransction();
+						List<BasicPortal> arrayList = new ArrayList<BasicPortal>();
+						arrayList = dbManager.getPortalsWithin(lat, lng, range);
+						BasicPortal[] portals = new BasicPortal[arrayList
+								.size()];
+						for (int i = 0; i < arrayList.size(); ++i) {
+							portals[i] = arrayList.get(i);
+						}
+						getActivity().runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								dialog2.dismiss();
+							}
+						});
+						PortalsList portalsList = new PortalsList();
+						Bundle bundle = new Bundle();
+						// Can NOT directly pass an arraylist as parcelable
+						// object in bundle.
+						bundle.putParcelableArray("array", portals);
+						bundle.putDouble("lat", lat);
+						bundle.putDouble("lng", lng);
+						portalsList.setArguments(bundle);
+						getActivity().getSupportFragmentManager()
+								.beginTransaction()
+								.replace(R.id.container, portalsList)
+								.addToBackStack(null).commit();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				DatabaseManager dbManager = new DatabaseManager(getActivity(),
-						"Database");
-				dbManager.endTransction();
-				List<BasicPortal> arrayList = new ArrayList<BasicPortal>();
-				arrayList = dbManager.getPortalsWithin(lat, lng, range);
-				BasicPortal[] portals = new BasicPortal[arrayList.size()];
-				for(int i = 0; i < arrayList.size(); ++i) {
-					portals[i] = arrayList.get(i);
-				}
-				PortalsList portalsList = new PortalsList();
-				Bundle bundle = new Bundle();
-				//Can NOT directly pass an arraylist as parcelable object in bundle.
-				bundle.putParcelableArray("array", portals);
-				bundle.putDouble("lat", lat);
-				bundle.putDouble("lng", lng);
-				portalsList.setArguments(bundle);
-				getActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.container, portalsList)
-						.addToBackStack(null).commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			};
+			thread.start();	
 		}
 	};
 
