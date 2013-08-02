@@ -1,6 +1,7 @@
 package com.shunix.portalsnav.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -57,6 +58,7 @@ public class DatabaseManager {
 
 	public List<BasicPortal> getPortalsWithin(double lat, double lng, int dist) {
 		List<BasicPortal> list = new ArrayList<BasicPortal>();
+		List<BasicPortal> postList = new ArrayList<BasicPortal>();
 		SQLHelper sqlHelper = new SQLHelper(context, "Database");
 		SQLiteDatabase database = sqlHelper.getReadableDatabase();
 		database.beginTransaction();
@@ -68,6 +70,8 @@ public class DatabaseManager {
 		if (database.inTransaction()) {
 			database.endTransaction();
 		}
+		List<Order> orders = new ArrayList<DatabaseManager.Order>();
+		Integer i = 0;
 		while (cur.moveToNext()) {
 			if (getDistance(lat, lng,
 					cur.getDouble(cur.getColumnIndex("portalLat")),
@@ -77,15 +81,35 @@ public class DatabaseManager {
 						.getDouble(cur.getColumnIndex("portalLat"))),
 						String.valueOf(cur.getDouble(cur
 								.getColumnIndex("portalLng"))));
+				Order order = new Order();
+				order.dist = (int) getDistance(lat, lng,
+						cur.getDouble(cur.getColumnIndex("portalLat")),
+						cur.getDouble(cur.getColumnIndex("portalLng")));
+				order.order = i;
+				i++;
+				orders.add(order);
 				list.add(portal);
 			}
 		}
+		Collections.sort(orders);
+		for(int j = 0; j < orders.size(); ++j) {
+			postList.add(list.get(orders.get(j).order));
+		}
 		database.close();
-		return list;
+		return postList;
 	}
-
+	
 	public void endTransction() {
 		adapter.commitTransaction();
 		adapter.close();
+	}
+	
+	class Order implements Comparable<Order>{
+		public Integer dist;
+		public Integer order;
+		@Override
+		public int compareTo(Order another) {
+			return this.dist.compareTo(another.dist);
+		}
 	}
 }
