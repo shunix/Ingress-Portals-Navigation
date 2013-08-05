@@ -61,12 +61,6 @@ public class PortalsFilterFragment extends Fragment {
 			public void onLocationChanged(Location location) {
 			}
 		};
-		dialog = ProgressDialog.show(getActivity(), "Locating",
-				"Please wait for a moment");
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				1000, 0, locationListener);
-		Thread gpsThread = new GPSThread();
-		gpsThread.start();
 		super.onCreate(savedInstanceState);
 	}
 
@@ -82,6 +76,27 @@ public class PortalsFilterFragment extends Fragment {
 		cancelButton.setOnClickListener(canceListener);
 		return view;
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(locationListener);
+	}
+	
+	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		dialog = ProgressDialog.show(getActivity(), "Locating",
+				"Please wait for a moment");
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				1000, 0, locationListener);
+		Thread gpsThread = new GPSThread();
+		gpsThread.start();
+	}
+
+
 
 	OnClickListener listListener = new OnClickListener() {
 
