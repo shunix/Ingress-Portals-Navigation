@@ -10,12 +10,12 @@
     <string name="email">admin@shunix.com</string>
     <string name="webhint">Website:</string>
     <string name="website">http://www.shunix.com</string>
-    <string name="version">1.0.0</string>
+    <string name="version">1.2.1</string>
     <string name="ok">OK</string>
     <string name="polist">Portals List:</string>
     <string name="curloc">Current location:</string>
     <string name="unknown">Unknown</string>
-    <string name="range">Portals Within Rang(km): </string>
+    <string name="range">Portals Within Range(km): </string>
     <string name="list">List</string>
     <string name="cancel">Cancel</string>
     <string name="nav">Navigation:</string>

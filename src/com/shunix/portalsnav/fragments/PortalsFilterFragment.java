@@ -78,8 +78,8 @@ public class PortalsFilterFragment extends Fragment {
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
 		locationManager.removeUpdates(locationListener);
 	}
 	
