@@ -19,5 +19,13 @@
     <string name="list">List</string>
     <string name="cancel">Cancel</string>
     <string name="nav">Navigation:</string>
+    <string name="beijing">Beijing</string>
+    <string name="shanghai">Shanghai (Includes Hangzhou, Suzhou, etc)</string>
+    <string name="guangzhou">Guangzhou</string>
+    <string name="chengdu">Chengdu</string>
+    <string name="chongqing">Chongqing</string>
+    <string name="wuhan">Wuhan</string>
+    <string name="nanjing">Nanjing</string>
+    <string name="xian">Xi\'an</string>
 
 </resources>
