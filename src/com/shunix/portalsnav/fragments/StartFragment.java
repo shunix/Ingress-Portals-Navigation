@@ -14,8 +14,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.shunix.portalsnav.R;
-import com.shunix.portalsnav.utils.AsyncHelper;
-import com.shunix.portalsnav.utils.DownloadAndUnzip;
 
 public class StartFragment extends Fragment {
 
@@ -81,11 +79,9 @@ public class StartFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			DownloadAndUnzip downloadAndUnzip = new DownloadAndUnzip(
-					getActivity());
-			AsyncHelper asyncHelper = new AsyncHelper(downloadAndUnzip);
-			asyncHelper.AsyncWorkBegin();
-			asyncHelper.AsyncWorkEnd();
+			getActivity().getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, new ChooseArea())
+					.addToBackStack(null).commit();
 		}
 	};
 

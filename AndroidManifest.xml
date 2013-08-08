@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shunix.portalsnav"
-    android:versionCode="4"
-    android:versionName="1.2.1" >
+    android:versionCode="6"
+    android:versionName="1.3.2" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -13,6 +13,7 @@
   	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+  	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
